@@ -1,0 +1,5 @@
+{
+  "jwtKey": "someJWTstring",
+  "mongoUrl": "mongodb://localhost/reports-app",
+  "port": 3000
+}
