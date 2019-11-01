@@ -43,12 +43,12 @@ router.get('/top-salary', auth, (req, res) => {
 });
 
 router.get('/bagde:badgeName', auth, (req, res) => {
-	if (!res.params.badgeName) return res.status(400).send('Badge type is required');
+	if (!req.params.badgeName) return res.status(400).send('Badge type is required');
 	downloadFromDropbox()
 		.then(csv => {
 			const noHeaderCsv = csv.slice(1);
 			return noHeaderCsv
-				.filter(user => user.slice(5).some(value => value === res.params.badgeName));
+				.filter(user => user.slice(5).some(value => value === req.params.badgeName));
 		})
 		.then(filtered => filtered.map(user => ({
 			name: user[0],
