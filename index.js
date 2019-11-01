@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const config = require('config');
 const auth = require('./routes/auth');
 const users = require('./routes/users');
+const reports = require('./routes/reports');
 const app = express();
 
 // TODO: dnf to remove default jwt before deployment
@@ -16,6 +17,7 @@ if (!config.get('jwtKey')) {
 app.use(express.json());
 app.use('/api/auth', auth);
 app.use('/api/users', users);
+app.use('/api/reports/', reports);
 
 mongoose.set('useFindAndModify', false);
 mongoose.set('findOneAndUpdate', false);

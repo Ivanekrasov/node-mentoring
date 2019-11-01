@@ -10,6 +10,10 @@
   ],
   "rules": {
     "new-cap": "off",
-    "capitalized-comments": "off"
+    "capitalized-comments": "off",
+		"curly": [2, "multi-line"],
+		"camelcase": ["error", {
+			"properties": "never"
+		}]
   }
 }

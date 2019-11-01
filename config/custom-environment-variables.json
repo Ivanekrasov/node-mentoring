@@ -1,4 +1,5 @@
 {
   "jwtKey": "node-mentoring_jwtKey",
+	"dropboxToken": "node-mentoring_dropboxToken",
   "port": "node-mentoring_jwtKey"
 }
