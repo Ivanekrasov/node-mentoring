@@ -1,9 +1,9 @@
 const moment = require('moment');
-const downloadFromDropbox = require('../../cloudApis/dropbox');
+const getDataFromCsv = require('./mapper/request');
 
 exports.getNewUsers = (req, res) => {
 	// TODO: implement limitations by users number, page size & page number
-	downloadFromDropbox()
+	getDataFromCsv()
 		.then(csv => {
 			const noHeaderCsv = csv.slice(1);
 			return noHeaderCsv
@@ -21,7 +21,7 @@ exports.getNewUsers = (req, res) => {
 };
 
 exports.getUsersSortedBySalary = (req, res) => {
-	downloadFromDropbox()
+	getDataFromCsv()
 		.then(csv => {
 			const noHeaderCsv = csv.slice(1);
 			return noHeaderCsv
@@ -41,7 +41,7 @@ exports.getUsersSortedBySalary = (req, res) => {
 
 exports.getUsersWithBadges = (req, res) => {
 	if (!req.params.badgeName) return res.status(400).send('Badge type is required');
-	downloadFromDropbox()
+	getDataFromCsv()
 		.then(csv => {
 			const noHeaderCsv = csv.slice(1);
 			return noHeaderCsv
