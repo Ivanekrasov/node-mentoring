@@ -1,10 +1,7 @@
 const moment = require('moment');
-const express = require('express');
-const router = express.Router();
-const auth = require('../middlware/auth');
-const downloadFromDropbox = require('../helpers/dropbox/download');
+const downloadFromDropbox = require('../../cloudApis/dropbox');
 
-router.get('/new-users', auth, (req, res) => {
+exports.getNewUsers = (req, res) => {
 	// TODO: implement limitations by users number, page size & page number
 	downloadFromDropbox()
 		.then(csv => {
@@ -21,9 +18,9 @@ router.get('/new-users', auth, (req, res) => {
 		})))
 		.then(users => res.send(users))
 		.catch(error => console.log(error));
-});
+};
 
-router.get('/top-salary', auth, (req, res) => {
+exports.getUsersSortedBySalary = (req, res) => {
 	downloadFromDropbox()
 		.then(csv => {
 			const noHeaderCsv = csv.slice(1);
@@ -40,9 +37,9 @@ router.get('/top-salary', auth, (req, res) => {
 		})))
 		.then(users => res.send(users))
 		.catch(error => console.log(error));
-});
+};
 
-router.get('/bagde:badgeName', auth, (req, res) => {
+exports.getUsersWithBadges = (req, res) => {
 	if (!req.params.badgeName) return res.status(400).send('Badge type is required');
 	downloadFromDropbox()
 		.then(csv => {
@@ -57,6 +54,4 @@ router.get('/bagde:badgeName', auth, (req, res) => {
 		})))
 		.then(users => res.send(users))
 		.catch(error => console.log(error));
-});
-
-module.exports = router;
+};
