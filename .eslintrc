@@ -14,6 +14,13 @@
 		"curly": [2, "multi-line"],
 		"camelcase": ["error", {
 			"properties": "never"
-		}]
+		}],
+		"no-process-exit": "warn",
+		"unicorn/filename-case": [
+			"warn",
+			{
+				"case": "camelCase"
+			}
+		]
   }
 }

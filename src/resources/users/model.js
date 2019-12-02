@@ -3,42 +3,48 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const mongoose = require('mongoose');
 
+const {
+	userNameMinLength,
+	userNameMaxLength,
+	emailMinLength,
+	emailMaxLength,
+	passwordMinLength,
+	passwordMaxLength
+} = require('../../../config/validationValues');
+
 const userSchema = new mongoose.Schema({
 	name: {
 		type: String,
 		required: true,
-		minLength: 3,
-		maxLength: 50
+		minLength: userNameMinLength,
+		maxLength: userNameMaxLength
 	},
 	email: {
 		type: String,
 		required: true,
-		minlength: 5,
-		maxlength: 255,
+		minlength: emailMinLength,
+		maxlength: emailMaxLength,
 		unique: true
 	},
 	password: {
 		type: String,
 		required: true,
-		minLength: 8,
-		maxLength: 32
+		minLength: passwordMinLength,
+		maxLength: passwordMaxLength
 	}
 });
 
 userSchema.methods.generateAuthToken = function () {
-	const token = jwt.sign({_id: this._id, isAdmin: this.isAdmin}, config.get('jwtKey'));
-	return token;
+	return jwt.sign({_id: this._id, isAdmin: this.isAdmin}, config.get('jwtKey'));
 };
 
 const User = mongoose.model('User', userSchema);
 
 function validateUser(user) {
 	const schema = Joi.object({
-		name: Joi.string().min(3).max(50).required(),
-		email: Joi.string().min(5).max(255).required().email(),
-		// TODO: change for prod
-		password: Joi.string().min(3).max(255).required()
-		// password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])(?=.{8,32})/).required()
+		name: Joi.string().min(userNameMinLength).max(userNameMaxLength).required(),
+		email: Joi.string().min(emailMinLength).max(emailMaxLength).required().email(),
+		password: Joi.string().min(passwordMinLength).max(passwordMaxLength).required()
 	});
 	return schema.validate(user);
 }

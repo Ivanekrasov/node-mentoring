@@ -1,13 +1,14 @@
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
+
 const {User, validate} = require('./model');
 
-exports.getCurrentUser = async (req, res) => {
+const getCurrentUser = async (req, res) => {
 	const user = await User.findById(req.user._id).select('-password');
 	res.send(user);
 };
 
-exports.createNewUser = async (req, res) => {
+const createNewUser = async (req, res) => {
 	const {error} = validate(req.body);
 	if (error) {
 		return res.status(400).send(error.details[0].message);
@@ -25,4 +26,9 @@ exports.createNewUser = async (req, res) => {
 
 	const token = user.generateAuthToken();
 	res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email']));
+};
+
+exports = {
+	getCurrentUser,
+	createNewUser
 };

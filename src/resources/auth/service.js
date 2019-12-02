@@ -1,13 +1,18 @@
 const Joi = require('@hapi/joi');
 const bcrypt = require('bcrypt');
-const {User} = require('../models/user');
+
+const {User} = require('../users/model');
+const {
+	emailMinLength,
+	emailMaxLength,
+	passwordMinLength,
+	passwordMaxLength
+} = require('../../../config/validationValues');
 
 function validate(req) {
 	const schema = Joi.object({
-		email: Joi.string().min(5).max(255).required().email(),
-		password: Joi.string().min(3).max(255).required()
-		// TODO: change for prod
-		// password: Joi.string().min(8).max(32).required()
+		email: Joi.string().min(emailMinLength).max(emailMaxLength).required().email(),
+		password: Joi.string().min(passwordMinLength).max(passwordMaxLength).required()
 	});
 	return schema.validate(req);
 }

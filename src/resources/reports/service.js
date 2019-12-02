@@ -1,57 +1,53 @@
 const moment = require('moment');
+
 const getDataFromCsv = require('./mapper/request');
 
-exports.getNewUsers = (req, res) => {
-	// TODO: implement limitations by users number, page size & page number
-	getDataFromCsv()
-		.then(csv => {
-			const noHeaderCsv = csv.slice(1);
-			return noHeaderCsv
-				.sort((firstUserRegDate, secondUserRegDate) => (
-					moment(secondUserRegDate[4]).unix() - moment(firstUserRegDate[4]).unix()
-				));
-		})
-		.then(sorted => sorted.map(user => ({
-			name: user[0],
-			lastName: user[1],
-			join_date: user[4]
-		})))
-		.then(users => res.send(users))
-		.catch(error => console.log(error));
+const getNewUsers = (req, res) => {
+	const noHeaderCsv = getDataFromCsv();
+	const sortedCsv = noHeaderCsv.sort((firstUserRegDate, secondUserRegDate) => (
+		moment(secondUserRegDate.joinDate).unix() - moment(firstUserRegDate.joinDate).unix()
+	));
+	const users = sortedCsv.map(user => ({
+		name: user.name,
+		lastName: user.lastName,
+		join_date: user.joinDate
+	}));
+
+	res.send(users);
 };
 
-exports.getUsersSortedBySalary = (req, res) => {
-	getDataFromCsv()
-		.then(csv => {
-			const noHeaderCsv = csv.slice(1);
-			return noHeaderCsv
-				.sort((firstUser, secondUser) => (
-					firstUser[2].replace(',', '') - secondUser[2].replace(',', '')
-				));
-		})
-		.then(sorted => sorted.map(user => ({
-			name: user[0],
-			lastName: user[1],
-			salary: user[2],
-			salary_usd: user[3]
-		})))
-		.then(users => res.send(users))
-		.catch(error => console.log(error));
+const getUsersSortedBySalary = (req, res) => {
+	const noHeaderCsv = getDataFromCsv();
+	const sortedCsv = noHeaderCsv
+		.sort((firstUser, secondUser) => (
+			firstUser.salary.replace(',', '') - secondUser.salary.replace(',', '')
+		));
+	const users = sortedCsv.map(user => ({
+		name: user.name,
+		lastName: user.lastName,
+		salary: user.salary,
+		salary_usd: user.salaryUsd
+	}));
+
+	res.send(users);
 };
 
-exports.getUsersWithBadges = (req, res) => {
+const getUsersWithBadges = (req, res) => {
 	if (!req.params.badgeName) return res.status(400).send('Badge type is required');
-	getDataFromCsv()
-		.then(csv => {
-			const noHeaderCsv = csv.slice(1);
-			return noHeaderCsv
-				.filter(user => user.slice(5).some(value => value === req.params.badgeName));
-		})
-		.then(filtered => filtered.map(user => ({
-			name: user[0],
-			lastName: user[1],
-			badges: user.slice(5)
-		})))
-		.then(users => res.send(users))
-		.catch(error => console.log(error));
+
+	const noHeaderCsv = getDataFromCsv();
+	const filteredCsv = noHeaderCsv.filter(user => user.badges.some(value => value === req.params.badgeName));
+	const users = filteredCsv.map(user => ({
+		name: user.name,
+		lastName: user.lastName,
+		badges: user.badges
+	}));
+
+	res.send(users);
+};
+
+exports = {
+	getNewUsers,
+	getUsersSortedBySalary,
+	getUsersWithBadges
 };

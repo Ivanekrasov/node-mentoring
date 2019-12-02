@@ -1,27 +1,37 @@
+const fs = require('fs');
+const path = require('path');
+const morgan = require('morgan');
 const express = require('express');
 const config = require('config');
 const mongoose = require('./mongodb');
-const auth = require('./routes/auth');
-const users = require('./routes/users');
-const reports = require('./routes/reports');
+const auth = require('./resources/auth/router');
+const users = require('./resources/users/router');
+const reports = require('./resources/reports/router');
+const {log, error} = require('./logger');
 const app = express();
 
-// TODO: dnf to remove default jwt before deployment
 if (!config.get('jwtKey')) {
-	console.error('ERROR: jwtKey is not defined.');
-	// eslint-disable-next-line unicorn/no-process-exit
-	process.exit(1);
+	error('ERROR: jwtKey is not defined.');
 }
 
-// Configure app
 app.use(express.json());
+app.use(morgan('dev', {
+	skip(req, res) {
+		return res.statusCode < 400;
+	}
+}));
+app.use(morgan('common', {
+	stream: fs.createWriteStream(path.join(config.get('logDir'), 'access.log'), {flags: 'a'})
+}));
 app.use(auth);
 app.use(users);
 app.use(reports);
 
-// Startup
-mongoose.connect(config.get('mongoUrl'), {useNewUrlParser: true, useUnifiedTopology: true})
-	.then(() => console.log('Mongoose successfully connected.'))
-	.catch(() => console.error('Mongoose failed to connect.'));
+try {
+	mongoose.connect(config.get('mongoUrl'), {useNewUrlParser: true, useUnifiedTopology: true});
+	log('Mongoose successfully connected.');
+} catch (error_) {
+	error(error_);
+}
 
 module.exports = app;
