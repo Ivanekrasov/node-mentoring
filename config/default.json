@@ -2,7 +2,6 @@
   "jwtKey": "someJWTstring",
 	"dropboxToken": "",
   "mongoUrl": "mongodb://localhost/reports-app",
-  "port": 3000,
-	"mode": "development",
-	"logDir": "./logs"
+  "port": 8080,
+	"mode": "development"
 }

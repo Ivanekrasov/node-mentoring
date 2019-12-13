@@ -21,6 +21,8 @@
 			{
 				"case": "camelCase"
 			}
-		]
+		],
+		"import/no-unassigned-import": "off",
+		"object-curly-spacing": ["error", "always", { "arraysInObjects": false }]
   }
 }

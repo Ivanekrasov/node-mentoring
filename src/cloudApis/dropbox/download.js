@@ -1,4 +1,4 @@
-const {path} = require('../../../config/dropbox');
+const { path } = require('../../../config/dropbox');
 const dropbox = require('./auth');
 
-module.exports = () => dropbox.filesDownload({path});
+module.exports = () => dropbox.filesDownload({ path });

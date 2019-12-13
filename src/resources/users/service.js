@@ -1,22 +1,23 @@
 const _ = require('lodash');
+const Boom = require('@hapi/boom');
 const bcrypt = require('bcrypt');
 
-const {User, validate} = require('./model');
+const { User, validate } = require('./model');
 
 const getCurrentUser = async (req, res) => {
 	const user = await User.findById(req.user._id).select('-password');
 	res.send(user);
 };
 
-const createNewUser = async (req, res) => {
-	const {error} = validate(req.body);
+const createNewUser = async (req, res, next) => {
+	const { error } = validate(req.body);
 	if (error) {
-		return res.status(400).send(error.details[0].message);
+		return next(Boom.badRequest(error.details[0].message));
 	}
 
-	let user = await User.findOne({email: req.body.email});
+	let user = await User.findOne({ email: req.body.email });
 	if (user) {
-		return res.status(400).send('User already registered.');
+		return next(Boom.badRequest('User already registered.'));
 	}
 
 	user = new User(_.pick(req.body, ['name', 'email', 'password']));
@@ -28,7 +29,7 @@ const createNewUser = async (req, res) => {
 	res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email']));
 };
 
-exports = {
+module.exports = {
 	getCurrentUser,
 	createNewUser
 };

@@ -1,6 +1,6 @@
 const fs = require('fs');
 const readline = require('readline');
-const {google} = require('googleapis');
+const { google } = require('googleapis');
 const downloadFile = require('./download');
 
 const SCOPES = [
@@ -21,7 +21,7 @@ function getAuthorized() {
 
 function authorize(credentials, callback) {
 	// eslint-disable-next-line camelcase
-	const {client_secret, client_id, redirect_uris} = credentials.installed;
+	const { client_secret, client_id, redirect_uris } = credentials.installed;
 	const oAuth2Client = new google.auth.OAuth2(
 		client_id, client_secret, redirect_uris[0]);
 

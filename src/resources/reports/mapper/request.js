@@ -24,6 +24,6 @@ module.exports = async () => {
 			}))
 		}));
 	} catch (error) {
-		return error;
+		throw error;
 	}
 };

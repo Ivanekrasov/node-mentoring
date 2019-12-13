@@ -1,17 +1,18 @@
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const Boom = require('@hapi/boom');
 
-module.exports = function (req, res, next) {
+module.exports = (req, res, next) => {
 	const token = req.header('x-auth-token');
 	if (!token) {
-		return res.status(401).send('Access denied. No token provided.');
+		return next(Boom.unauthorized());
 	}
 
 	try {
 		const decoded = jwt.verify(token, config.get('jwtKey'));
 		req.user = decoded;
 		next();
-	} catch {
-		res.status(400).send('Invalid token.');
+	} catch (error) {
+		next(error);
 	}
 };

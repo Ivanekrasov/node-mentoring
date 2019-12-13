@@ -32,8 +32,8 @@ const getUsersSortedBySalary = (req, res) => {
 	res.send(users);
 };
 
-const getUsersWithBadges = (req, res) => {
-	if (!req.params.badgeName) return res.status(400).send('Badge type is required');
+const getUsersWithBadges = (req, res, next) => {
+	if (!req.params.badgeName) return next(new Error(), { message: 'Badge type is required' });
 
 	const noHeaderCsv = getDataFromCsv();
 	const filteredCsv = noHeaderCsv.filter(user => user.badges.some(value => value === req.params.badgeName));
@@ -46,7 +46,7 @@ const getUsersWithBadges = (req, res) => {
 	res.send(users);
 };
 
-exports = {
+module.exports = {
 	getNewUsers,
 	getUsersSortedBySalary,
 	getUsersWithBadges
