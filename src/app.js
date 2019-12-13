@@ -12,7 +12,7 @@ const reports = require('./resources/reports/router');
 const app = express();
 
 if (!config.get('jwtKey')) {
-	logger.error('no key is provided');
+	throw new Error('jwtKey is not defined');
 }
 
 app.use(express.json());

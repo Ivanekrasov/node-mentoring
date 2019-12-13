@@ -1,0 +1,4 @@
+{
+	"jwtKey": "test",
+	"db": "mongodb://localhost/report-app-tests"
+}

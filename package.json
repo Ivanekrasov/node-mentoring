@@ -9,7 +9,7 @@
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "test": "jest",
-    "test:watch": "jest --watch",
+    "test:watch": "jest --watchAll --verbose",
     "test:cov": "jest --coverage"
   },
   "lint-staged": {
@@ -24,6 +24,12 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
   },
   "repository": {
     "type": "git",
@@ -66,10 +72,6 @@
     "winston-daily-rotate-file": "^4.3.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.5",
-    "@babel/preset-env": "^7.7.6",
-    "babel-eslint": "^10.0.3",
-    "babel-jest": "^24.9.0",
     "eslint": "^6.6.0",
     "eslint-config-xo": "^0.27.2",
     "eslint-plugin-import": "^2.18.2",
